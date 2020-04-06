@@ -18,8 +18,8 @@
 
   /** @type {MediaStreamConstraints} */
   const constraints = {
-    // audio: true,
-    video: { facingMode: "user" }
+    audio: true,
+    video: { facingMode: "user" },
   };
 
   socket.on('full', function(room) {
