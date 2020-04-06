@@ -10,7 +10,7 @@ if (credentials.key && credentials.cert) {
 } else {
   const http = require('http');
   server = http.createServer(app);
-  port = 3002;
+  port = 3000;
 }
 const io = require('socket.io')(server);
 const RoomService = require('./RoomService')(io);
@@ -20,4 +20,4 @@ app.use(express.static(__dirname + '/public'));
 app.get('*', function(req, res) {
     res.sendFile(`${__dirname}/public/index.html`);
 });
-server.listen(port, () => console.log(`Server is running on port ${port}`));
+server.listen(port || 3002, () => console.log(`Server is running on port ${port}`));
