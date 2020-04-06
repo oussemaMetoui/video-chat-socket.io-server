@@ -10,7 +10,7 @@ if (credentials.key && credentials.cert) {
 } else {
   const http = require('http');
   server = http.createServer(app);
-  port = 3000;
+  port = 3002;
 }
 const io = require('socket.io')(server);
 const RoomService = require('./RoomService')(io);
