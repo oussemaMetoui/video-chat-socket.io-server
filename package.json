@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Video Chat application.",
   "main": "server.js",
-  "author": "Brian Mau",
+  "author": "digou",
+  "engines": {
+    "node": "12.11.1"
+  },
   "scripts": {
     "start": "node server.js",
     "debug": "node --nolazy --inspect --debug-brk=5858 ./server.js"

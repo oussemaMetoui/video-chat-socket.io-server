@@ -20,4 +20,4 @@ app.use(express.static(__dirname + '/public'));
 app.get('*', function(req, res) {
     res.sendFile(`${__dirname}/public/index.html`);
 });
-server.listen(port || 3002, () => console.log(`Server is running on port ${port}`));
+server.listen(port || 3000, () => console.log(`Server is running on port ${port}`));
