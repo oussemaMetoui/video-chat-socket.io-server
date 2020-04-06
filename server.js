@@ -1,8 +1,11 @@
 const credentials = require('./credentials');
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+
 let server;
 let port;
+
 if (credentials.key && credentials.cert) {
   const https = require('https');
   server = https.createServer(credentials, app);
@@ -12,6 +15,8 @@ if (credentials.key && credentials.cert) {
   server = http.createServer(app);
   port = 3000;
 }
+app.use(bodyParser.json());
+
 const io = require('socket.io')(server);
 const RoomService = require('./RoomService')(io);
 io.sockets.on('connection', RoomService.listen);
