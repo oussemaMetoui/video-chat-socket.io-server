@@ -18,6 +18,6 @@ io.sockets.on('connection', RoomService.listen);
 io.sockets.on('error', e => console.log(e));
 app.use(express.static(__dirname + '/public'));
 app.get('*', function(req, res) {
-    res.sendFile(`${__dirname}/index.html`);
+    res.sendFile(`index.html`);
 });
 server.listen(port || 3000, () => console.log(`Server is running on port ${port}`));
