@@ -1,10 +1,10 @@
-(function() {
+(function () {
   /** @type {SocketIOClient.Socket} */
   const socket = io.connect(window.location.origin);
   const localVideo = document.querySelector('.localVideo');
   const remoteVideos = document.querySelector('.remoteVideos');
   const peerConnections = {};
-  
+
   let room = !location.pathname.substring(1) ? 'home' : location.pathname.substring(1);
   let getUserMediaAttempts = 5;
   let gettingUserMedia = false;
@@ -12,7 +12,10 @@
   /** @type {RTCConfiguration} */
   const config = {
     'iceServers': [{
-      'urls': ['stun:stun.l.google.com:19302']
+      'urls': [
+        'stun:stun.l.google.com:19302',
+        "turn:thesportopia.com:3478"
+      ]
     }]
   };
 
@@ -22,11 +25,11 @@
     video: { facingMode: "user" },
   };
 
-  socket.on('full', function(room) {
+  socket.on('full', function (room) {
     alert('Room ' + room + ' is full');
   });
 
-  socket.on('bye', function(id) {
+  socket.on('bye', function (id) {
     handleRemoteHangup(id);
   });
 
@@ -34,7 +37,7 @@
     socket.emit('join', room);
   }
 
-  window.onunload = window.onbeforeunload = function() {
+  window.onunload = window.onbeforeunload = function () {
     socket.close();
   };
 
@@ -48,44 +51,44 @@
       peerConnection.addStream(localVideo.srcObject);
     }
     peerConnection.createOffer()
-    .then(sdp => peerConnection.setLocalDescription(sdp))
-    .then(function () {
-      socket.emit('offer', id, peerConnection.localDescription);
-    });
+      .then(sdp => peerConnection.setLocalDescription(sdp))
+      .then(function () {
+        socket.emit('offer', id, peerConnection.localDescription);
+      });
     peerConnection.onaddstream = event => handleRemoteStreamAdded(event.stream, id);
-    peerConnection.onicecandidate = function(event) {
+    peerConnection.onicecandidate = function (event) {
       if (event.candidate) {
         socket.emit('candidate', id, event.candidate);
       }
     };
   });
 
-  socket.on('offer', function(id, description) {
+  socket.on('offer', function (id, description) {
     const peerConnection = new RTCPeerConnection(config);
     peerConnections[id] = peerConnection;
     if (localVideo instanceof HTMLVideoElement) {
       peerConnection.addStream(localVideo.srcObject);
     }
     peerConnection.setRemoteDescription(description)
-    .then(() => peerConnection.createAnswer())
-    .then(sdp => peerConnection.setLocalDescription(sdp))
-    .then(function () {
-      socket.emit('answer', id, peerConnection.localDescription);
-    });
+      .then(() => peerConnection.createAnswer())
+      .then(sdp => peerConnection.setLocalDescription(sdp))
+      .then(function () {
+        socket.emit('answer', id, peerConnection.localDescription);
+      });
     peerConnection.onaddstream = event => handleRemoteStreamAdded(event.stream, id);
-    peerConnection.onicecandidate = function(event) {
+    peerConnection.onicecandidate = function (event) {
       if (event.candidate) {
         socket.emit('candidate', id, event.candidate);
       }
     };
   });
 
-  socket.on('candidate', function(id, candidate) {
+  socket.on('candidate', function (id, candidate) {
     peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
-    .catch(e => console.error(e));
+      .catch(e => console.error(e));
   });
 
-  socket.on('answer', function(id, description) {
+  socket.on('answer', function (id, description) {
     peerConnections[id].setRemoteDescription(description);
   });
 
@@ -124,8 +127,8 @@
       } else if (!gettingUserMedia && !localVideo.srcObject) {
         gettingUserMedia = true;
         navigator.mediaDevices.getUserMedia(constraints)
-        .then(getUserMediaSuccess)
-        .catch(getUserMediaError);
+          .then(getUserMediaSuccess)
+          .catch(getUserMediaError);
       }
     }
   }
