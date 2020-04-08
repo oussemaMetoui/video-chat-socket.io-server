@@ -9,12 +9,12 @@
   let getUserMediaAttempts = 5;
   let gettingUserMedia = false;
 
-  /** @type {RTCConfiguration} */
+  // /** @type {RTCConfiguration} */
   const config = {
     'iceServers': [{
       'urls': [
         'stun:stun.l.google.com:19302',
-        "turn:thesportopia.com:3478"
+        { username: "username1", credential: "password1", urls: ["turn:thesportopia.com:3478"] }
       ]
     }]
   };
